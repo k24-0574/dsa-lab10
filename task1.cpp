@@ -9,7 +9,7 @@ class maxHeap{
 	int right(int i){ return 2*i+2; }
 	
 	void heapifyUp (int index){
-		while(index!=0 && arr[index] < arr[parent(index)] ){
+		while(index!=0 && arr[index] > arr[parent(index)] ){
 			swap (arr[index], arr[parent(index)]);
 			index = parent(index);
 		}
@@ -20,7 +20,7 @@ class maxHeap{
 		int l = left(index), r = right(index);
 		
 		if(l<currSize && arr[l] > arr[largest]) largest = l;
-		if(r<currSize && arr[l] > arr[largest]) largest = r;
+		if(r<currSize && arr[r] > arr[largest]) largest = r;
 		
 		if(largest != index) {
 			swap (arr[index], arr[largest]);
@@ -51,6 +51,7 @@ class maxHeap{
 			}
 			
 			arr[0] = arr[currSize-1];
+            currSize--;
 			heapifyDown(0);
 		}
 		
@@ -62,9 +63,26 @@ class maxHeap{
 			cout<<endl;
 		}
 		
-		void update(int i, int val){
-			
-		}
+		void update_key(int i, int new_val){
+            if(i<0||i>currSize) {
+                cout<<"invalid index"; return;
+            }
+            int old_val =  arr[i];
+            arr[i] = new_val;
+            if(new_val>old_val) heapifyUp(i);
+            if(new_val<old_val) heapifyDown(i);
+
+            cout<<endl<<"After updating: ";
+            display();
+
+
+            //now delete
+            arr[i] = arr[currSize-1]; //last element at i index
+            currSize--;
+            heapifyDown(i); // arr[i] is replaced by a smaller value and last index will have smaller value
+            cout<<endl<<"After deleting: ";
+            display();
+        }
 		
 };
 
@@ -79,7 +97,7 @@ int main(){
 	}
 	
 	h1.display();
-	
+    h1.update_key(3, 3); //3rd pos = 5, replaced with 3 and then deleted
 	
 	return 0;
 }
